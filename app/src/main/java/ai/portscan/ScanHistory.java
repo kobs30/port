@@ -58,9 +58,16 @@ final class ScanHistory {
         catch (Exception e) { throw new IllegalStateException(e); }
         context.getSharedPreferences("history", 0).edit().putString("entries", array.toString()).apply();
     }
-    String csv() {
+    List<Entry> visibleEntries(boolean confirmedOnly) {
+        List<Entry> visible = new ArrayList<>();
+        for (Entry entry : entries.values()) {
+            if (!confirmedOnly || entry.checksum) visible.add(entry);
+        }
+        return visible;
+    }
+    String csv(boolean confirmedOnly) {
         StringBuilder text = new StringBuilder("\uFEFFnumber,checksum_matches,repeated,assembled,sweep,source,first_seen_ms\r\n");
-        for (Entry e : entries.values()) text.append(quote(e.number)).append(',').append(e.checksum).append(',')
+        for (Entry e : visibleEntries(confirmedOnly)) text.append(quote(e.number)).append(',').append(e.checksum).append(',')
             .append(e.repeated).append(',').append(e.assembled).append(',').append(quote(e.sweep)).append(',')
             .append(quote(e.source)).append(',').append(e.firstSeen).append("\r\n");
         return text.toString();

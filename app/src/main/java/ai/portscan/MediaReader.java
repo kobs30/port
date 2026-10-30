@@ -19,7 +19,7 @@ final class MediaReader {
         try (InputStream stream = context.getContentResolver().openInputStream(uri)) {
             BitmapFactory.decodeStream(stream, null, options);
         }
-        if (options.outWidth <= 0 || options.outHeight <= 0) throw new IllegalArgumentException("Файл не является изображением");
+        if (options.outWidth <= 0 || options.outHeight <= 0) throw new IllegalArgumentException("This file is not an image");
         options.inSampleSize = 1;
         while (Math.max(options.outWidth, options.outHeight) / options.inSampleSize > maxSide * 2)
             options.inSampleSize *= 2;
@@ -28,7 +28,7 @@ final class MediaReader {
         try (InputStream stream = context.getContentResolver().openInputStream(uri)) {
             bitmap = BitmapFactory.decodeStream(stream, null, options);
         }
-        if (bitmap == null) throw new IllegalArgumentException("Не удалось открыть фото");
+        if (bitmap == null) throw new IllegalArgumentException("Could not open photo");
         try {
             ExifInterface exif;
             try (InputStream stream = context.getContentResolver().openInputStream(uri)) { exif = new ExifInterface(stream); }
